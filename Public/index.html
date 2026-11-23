@@ -158,4 +158,10 @@
   fetch("/api/config").then(function(r){ return r.json(); }).then(function(c){
     cfg = c; $("sym").textContent = sym() || cfg.currency;
     render();
-    return initOnce().then(initMonthly);
+    return initOnce().then(initMonthly); }).catch(function(){
+    showError("The donation form could not load. Please refresh the page.");
+  });
+})();
+</script>
+</body>
+</html>
