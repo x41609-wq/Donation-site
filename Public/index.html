@@ -70,7 +70,7 @@
 
   function showError(m){ errorEl.textContent = m || ""; }
   function sym(){ return symbols[cfg.currency] || ""; }
-  function monthlyAmounts(){ return Object.keys(cfg.plans).map(Number).sort(function(a,b){return a-b;}); }
+  function monthlyAmounts(){ return Object.keys(cfg.plans || {}).map(Number).sort(function(a,b){return a-b;}); }
 
   function render(){
     var list = mode === "once" ? PRESETS : monthlyAmounts();
@@ -81,13 +81,14 @@
       b.textContent = sym() + v + (mode === "monthly" ? "/mo" : "");
       b.setAttribute("aria-pressed", String(selected === v && !customEl.value));
       b.onclick = function(){ selected = v; customEl.value = ""; showError(); render(); };
-      amountsEl.appendChild(b);if (mode === "monthly" && !list.length) {
-  var m = document.createElement("p");
-  m.style.gridColumn = "1 / -1";
-  m.textContent = "Monthly giving is coming soon. Please choose One time for now.";
-  amountsEl.appendChild(m);
-}
+      amountsEl.appendChild(b);
     });
+    if (mode === "monthly" && !list.length) {
+      var m = document.createElement("p");
+      m.style.gridColumn = "1 / -1";
+      m.textContent = "Monthly giving is coming soon. Please choose One time for now.";
+      amountsEl.appendChild(m);
+    }
     $("customWrap").classList.toggle("hidden", mode === "monthly");
     $("paypal-once").classList.toggle("hidden", mode !== "once");
     $("paypal-monthly").classList.toggle("hidden", mode !== "monthly");
@@ -145,7 +146,7 @@
   }
 
   function initMonthly(){
-    if (!monthlyAmounts().length) { $("tabMonthly").classList.add("hidden"); $("tabs").style.gridTemplateColumns = "1fr"; return Promise.resolve(); }
+    if (!monthlyAmounts().length) { return Promise.resolve(); }
     return loadSdk("paypalMonthly", "&components=buttons&vault=true&intent=subscription").then(function(){
       paypalMonthly.Buttons({
         style: { layout: "vertical", shape: "rect", label: "subscribe" },
@@ -163,7 +164,8 @@
   fetch("/api/config").then(function(r){ return r.json(); }).then(function(c){
     cfg = c; $("sym").textContent = sym() || cfg.currency;
     render();
-    return initOnce().then(initMonthly); }).catch(function(){
+    return initOnce().then(initMonthly);
+  }).catch(function(){
     showError("The donation form could not load. Please refresh the page.");
   });
 })();
