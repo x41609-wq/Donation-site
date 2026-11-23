@@ -5,32 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Support our channel</title>
 <style>
-  :root{--night:#1b2340;--dusk:#2c3763;--light:#f3d9a0;--paper:#f7f3ea;--ink:#1b2340;--muted:#c9cde0;color-scheme:dark}
+  :root{--deep:#4a3208;--light:#fbe7b0;--paper:#fffaf0;--ink:#3b2a08;--muted:#5c4510;color-scheme:light}
   *{box-sizing:border-box}
   html,body{margin:0}
-  body{min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#5a5f8f 0%,var(--dusk) 35%,var(--night) 75%);color:var(--paper);font-family:Georgia,"Times New Roman",serif;line-height:1.6;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);display:flex;align-items:center;justify-content:center}
+  body{min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#fbe7a1 0%,#eec45f 40%,#c8921a 80%);color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.6;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);display:flex;align-items:center;justify-content:center}
   main{width:100%;max-width:520px;padding:40px 22px}
-  h1{font-size:clamp(2rem,7vw,2.8rem);line-height:1.15;margin:0 0 14px;font-weight:600;color:var(--light)}
+  h1{font-size:clamp(2rem,7vw,2.8rem);line-height:1.15;margin:0 0 14px;font-weight:600;color:var(--deep)}
   p.lead{margin:0 0 30px;color:var(--muted);font-size:1.1rem}
-  .card{background:var(--paper);color:var(--ink);border-radius:14px;padding:26px 22px}
-  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#e6e0cf;border-radius:10px;padding:5px;margin-bottom:20px}
+  .card{background:var(--paper);color:var(--ink);border-radius:14px;padding:26px 22px;box-shadow:0 10px 30px rgba(90,60,5,.25)}
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f1e3b8;border-radius:10px;padding:5px;margin-bottom:20px}
   .tab{font:inherit;font-size:1.05rem;padding:11px 0;border:0;border-radius:7px;cursor:pointer;background:transparent;color:var(--ink)}
-  .tab[aria-pressed="true"]{background:var(--night);color:var(--light)}
+  .tab[aria-pressed="true"]{background:var(--deep);color:var(--light)}
   .card h2{margin:0 0 16px;font-size:1.15rem;font-weight:600}
   .amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-  .amt{font:inherit;font-size:1.15rem;padding:14px 0;border-radius:10px;cursor:pointer;background:#fff;color:var(--ink);border:2px solid #d8d3c4}
-  .amt[aria-pressed="true"]{border-color:var(--night);background:var(--night);color:var(--light)}
-  .custom{display:flex;align-items:center;border:2px solid #d8d3c4;border-radius:10px;background:#fff;padding:0 14px;margin-bottom:8px}
-  .custom:focus-within{border-color:var(--night)}
-  .custom span{font-size:1.2rem;color:#6b6f86}
+  .amt{font:inherit;font-size:1.15rem;padding:14px 0;border-radius:10px;cursor:pointer;background:#fff;color:var(--ink);border:2px solid #e6d3a0}
+  .amt[aria-pressed="true"]{border-color:var(--deep);background:var(--deep);color:var(--light)}
+  .custom{display:flex;align-items:center;border:2px solid #e6d3a0;border-radius:10px;background:#fff;padding:0 14px;margin-bottom:8px}
+  .custom:focus-within{border-color:var(--deep)}
+  .custom span{font-size:1.2rem;color:#8a6a24}
   .custom input{flex:1;border:0;outline:0;font:inherit;font-size:1.2rem;padding:14px 8px;background:transparent;color:var(--ink);min-width:0}
   .hidden{display:none}
   .error{min-height:1.4em;margin:6px 0 10px;color:#9b2c2c;font-size:.95rem}
-  .note{margin:14px 0 0;font-size:.9rem;color:#5b5f78;text-align:center}
+  .note{margin:14px 0 0;font-size:.9rem;color:#7a5f22;text-align:center}
   .done{text-align:center;padding:20px 0}
   .done h2{font-size:1.5rem}
-  .thanks{margin:28px 0 0;text-align:center;color:var(--muted);font-style:italic}
-  button:focus-visible,input:focus-visible{outline:3px solid var(--light);outline-offset:2px}
+  .thanks{margin:28px 0 0;text-align:center;color:var(--deep);font-style:italic}
+  button:focus-visible,input:focus-visible{outline:3px solid var(--deep);outline-offset:2px}
 </style>
 </head>
 <body>
