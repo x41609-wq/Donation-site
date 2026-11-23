@@ -81,7 +81,12 @@
       b.textContent = sym() + v + (mode === "monthly" ? "/mo" : "");
       b.setAttribute("aria-pressed", String(selected === v && !customEl.value));
       b.onclick = function(){ selected = v; customEl.value = ""; showError(); render(); };
-      amountsEl.appendChild(b);
+      amountsEl.appendChild(b);if (mode === "monthly" && !list.length) {
+  var m = document.createElement("p");
+  m.style.gridColumn = "1 / -1";
+  m.textContent = "Monthly giving is coming soon. Please choose One time for now.";
+  amountsEl.appendChild(m);
+}
     });
     $("customWrap").classList.toggle("hidden", mode === "monthly");
     $("paypal-once").classList.toggle("hidden", mode !== "once");
