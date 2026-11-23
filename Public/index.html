@@ -79,9 +79,8 @@
       var b = document.createElement("button");
       b.type = "button"; b.className = "amt";
       b.textContent = sym() + v + (mode === "monthly" ? "/mo" : "");
-      b.setAttribute("aria-pressed", String(selected === v && !customEl.value));
-      b.onclick = function(){ selected = v; customEl.value = ""; showError(); render(); };
-      amountsEl.appendChild(b);
+      b.setAttribute("aria-pressed", String(selected === v));
+      b.onclick = function(){ selected = v; customEl.value = (mode === "once") ? v : ""; showError(); render(); };
     });
     if (mode === "monthly" && !list.length) {
       var m = document.createElement("p");
