@@ -30,7 +30,7 @@ async function accessToken() {
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "Public")));
 
 app.get("/api/config", (req, res) => {
   res.json({ clientId: PAYPAL_CLIENT_ID, currency: CURRENCY, plans });
