@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Support our channel</title>
+<style>
+  :root{--night:#1b2340;--dusk:#2c3763;--light:#f3d9a0;--paper:#f7f3ea;--ink:#1b2340;--muted:#c9cde0;color-scheme:dark}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#5a5f8f 0%,var(--dusk) 35%,var(--night) 75%);color:var(--paper);font-family:Georgia,"Times New Roman",serif;line-height:1.6;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);display:flex;align-items:center;justify-content:center}
+  main{width:100%;max-width:520px;padding:40px 22px}
+  h1{font-size:clamp(2rem,7vw,2.8rem);line-height:1.15;margin:0 0 14px;font-weight:600;color:var(--light)}
+  p.lead{margin:0 0 30px;color:var(--muted);font-size:1.1rem}
+  .card{background:var(--paper);color:var(--ink);border-radius:14px;padding:26px 22px}
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#e6e0cf;border-radius:10px;padding:5px;margin-bottom:20px}
+  .tab{font:inherit;font-size:1.05rem;padding:11px 0;border:0;border-radius:7px;cursor:pointer;background:transparent;color:var(--ink)}
+  .tab[aria-pressed="true"]{background:var(--night);color:var(--light)}
+  .card h2{margin:0 0 16px;font-size:1.15rem;font-weight:600}
+  .amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .amt{font:inherit;font-size:1.15rem;padding:14px 0;border-radius:10px;cursor:pointer;background:#fff;color:var(--ink);border:2px solid #d8d3c4}
+  .amt[aria-pressed="true"]{border-color:var(--night);background:var(--night);color:var(--light)}
+  .custom{display:flex;align-items:center;border:2px solid #d8d3c4;border-radius:10px;background:#fff;padding:0 14px;margin-bottom:8px}
+  .custom:focus-within{border-color:var(--night)}
+  .custom span{font-size:1.2rem;color:#6b6f86}
+  .custom input{flex:1;border:0;outline:0;font:inherit;font-size:1.2rem;padding:14px 8px;background:transparent;color:var(--ink);min-width:0}
+  .hidden{display:none}
+  .error{min-height:1.4em;margin:6px 0 10px;color:#9b2c2c;font-size:.95rem}
+  .note{margin:14px 0 0;font-size:.9rem;color:#5b5f78;text-align:center}
+  .done{text-align:center;padding:20px 0}
+  .done h2{font-size:1.5rem}
+  .thanks{margin:28px 0 0;text-align:center;color:var(--muted);font-style:italic}
+  button:focus-visible,input:focus-visible{outline:3px solid var(--light);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Help us keep sharing hope</h1>
+  <p class="lead">Every video on our channel is made to bring comfort and encouragement to someone who needs it today. If these messages have blessed you, your gift helps us make more.</p>
+
+  <div class="card" id="card">
+    <div id="form">
+      <div class="tabs" id="tabs">
+        <button class="tab" type="button" id="tabOnce" aria-pressed="true">One time</button>
+        <button class="tab" type="button" id="tabMonthly" aria-pressed="false">Monthly</button>
+      </div>
+      <h2>Choose an amount</h2>
+      <div class="amounts" id="amounts"></div>
+      <label class="custom" id="customWrap">
+        <span id="sym">$</span>
+        <input id="custom" type="number" inputmode="decimal" min="1" step="0.01" placeholder="Other amount" aria-label="Other amount">
+      </label>
+      <p class="error" id="error" role="alert"></p>
+      <div id="paypal-once"></div>
+      <div id="paypal-monthly" class="hidden"></div>
+      <p class="note">Pay with PayPal or a debit or credit card. Payments are processed securely by PayPal, and you stay on this page.</p>
+    </div>
+    <div class="done hidden" id="done"><h2>Thank you!</h2><p id="doneMsg">Your gift was received. God bless you.</p></div>
+  </div>
+  <p class="thanks">Thank you, and God bless you.</p>
+</main>
+
+<script>
+(function(){
+  var cfg, mode = "once", selected = 25;
+  var PRESETS = [5, 10, 25, 50, 100, 250];
+  var symbols = {USD:"$", EUR:"€", GBP:"£", INR:"₹", CAD:"$", AUD:"$"};
+  var $ = function(id){ return document.getElementById(id); };
+  var amountsEl = $("amounts"), customEl = $("custom"), errorEl = $("error");
+
+  function showError(m){ errorEl.textContent = m || ""; }
+  function sym(){ return symbols[cfg.currency] || ""; }
+  function monthlyAmounts(){ return Object.keys(cfg.plans).map(Number).sort(function(a,b){return a-b;}); }
+
+  function render(){
+    var list = mode === "once" ? PRESETS : monthlyAmounts();
+    amountsEl.innerHTML = "";
+    list.forEach(function(v){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "amt";
+      b.textContent = sym() + v + (mode === "monthly" ? "/mo" : "");
+      b.setAttribute("aria-pressed", String(selected === v && !customEl.value));
+      b.onclick = function(){ selected = v; customEl.value = ""; showError(); render(); };
+      amountsEl.appendChild(b);
+    });
+    $("customWrap").classList.toggle("hidden", mode === "monthly");
+    $("paypal-once").classList.toggle("hidden", mode !== "once");
+    $("paypal-monthly").classList.toggle("hidden", mode !== "monthly");
+    $("tabOnce").setAttribute("aria-pressed", String(mode === "once"));
+    $("tabMonthly").setAttribute("aria-pressed", String(mode === "monthly"));
+  }
+
+  function setMode(m){
+    mode = m; customEl.value = ""; showError();
+    if (m === "monthly") { var l = monthlyAmounts(); selected = l.indexOf(10) > -1 ? 10 : l[0]; }
+    else selected = 25;
+    render();
+  }
+  $("tabOnce").onclick = function(){ setMode("once"); };
+  $("tabMonthly").onclick = function(){ setMode("monthly"); };
+  customEl.addEventListener("input", function(){ showError(); selected = null; render(); });
+
+  function currentAmount(){ return customEl.value ? parseFloat(customEl.value) : selected; }
+  function finish(msg){ $("form").classList.add("hidden"); $("done").classList.remove("hidden"); if (msg) $("doneMsg").textContent = msg; }
+
+  function loadSdk(ns, extra){
+    return new Promise(function(res, rej){
+      var s = document.createElement("script");
+      s.src = "https://www.paypal.com/sdk/js?client-id=" + encodeURIComponent(cfg.clientId) + "&currency=" + cfg.currency + extra;
+      s.setAttribute("data-namespace", ns);
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  function initOnce(){
+    return loadSdk("paypalOnce", "&components=buttons&enable-funding=card").then(function(){
+      paypalOnce.Buttons({
+        style: { layout: "vertical", shape: "rect", label: "donate" },
+        onClick: function(d, actions){
+          var a = currentAmount();
+          if (!a || isNaN(a) || a < 1) { showError("Enter an amount of 1 or more."); return actions.reject(); }
+          showError(); return actions.resolve();
+        },
+        createOrder: function(){
+          return fetch("/api/orders", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ amount: currentAmount() }) })
+            .then(function(r){ return r.json().then(function(d){ if (!r.ok) throw new Error(d.error); return d.id; }); });
+        },
+        onApprove: function(data){
+          return fetch("/api/orders/" + data.orderID + "/capture", { method: "POST" })
+            .then(function(r){ return r.json().then(function(d){
+              if (!r.ok || d.status !== "COMPLETED") throw new Error(d.error || "Payment not completed.");
+              finish("Your gift was received. God bless you.");
+            }); })
+            .catch(function(e){ showError(e.message); });
+        },
+        onError: function(){ showError("Something went wrong with the payment. You have not been charged. Please try again."); }
+      }).render("#paypal-once");
+    });
+  }
+
+  function initMonthly(){
+    if (!monthlyAmounts().length) { $("tabMonthly").classList.add("hidden"); $("tabs").style.gridTemplateColumns = "1fr"; return Promise.resolve(); }
+    return loadSdk("paypalMonthly", "&components=buttons&vault=true&intent=subscription").then(function(){
+      paypalMonthly.Buttons({
+        style: { layout: "vertical", shape: "rect", label: "subscribe" },
+        onClick: function(d, actions){
+          if (!cfg.plans[selected]) { showError("Choose a monthly amount."); return actions.reject(); }
+          showError(); return actions.resolve();
+        },
+        createSubscription: function(d, actions){ return actions.subscription.create({ plan_id: cfg.plans[selected] }); },
+        onApprove: function(){ finish("Your monthly gift is set up. God bless you."); },
+        onError: function(){ showError("Something went wrong. You have not been charged. Please try again."); }
+      }).render("#paypal-monthly");
+    });
+  }
+
+  fetch("/api/config").then(function(r){ return r.json(); }).then(function(c){
+    cfg = c; $("sym").textContent = sym() || cfg.currency;
+    render();
+    return initOnce().then(initMonthly);
