@@ -122,7 +122,7 @@
   function initOnce(){
     return loadSdk("paypalOnce", "&components=buttons&enable-funding=card").then(function(){
       paypalOnce.Buttons({
-        style: { layout: "vertical", shape: "rect", label: "donate" },
+        style: { layout: "vertical", shape: "rect", label: "paypal" },
         onClick: function(d, actions){
           var a = currentAmount();
           if (!a || isNaN(a) || a < 1) { showError("Enter an amount of 1 or more."); return actions.reject(); }
