@@ -80,7 +80,13 @@
       b.type = "button"; b.className = "amt";
       b.textContent = sym() + v + (mode === "monthly" ? "/mo" : "");
       b.setAttribute("aria-pressed", String(selected === v));
-      b.onclick = function(){ selected = v; customEl.value = (mode === "once") ? v : ""; showError(); render(); };
+      b.onclick = function(){
+        selected = v;
+        customEl.value = (mode === "once") ? String(v) : "";
+        showError();
+        render();
+      };
+      amountsEl.appendChild(b);
     });
     if (mode === "monthly" && !list.length) {
       var m = document.createElement("p");
@@ -98,12 +104,17 @@
   function setMode(m){
     mode = m; customEl.value = ""; showError();
     if (m === "monthly") { var l = monthlyAmounts(); selected = l.indexOf(10) > -1 ? 10 : l[0]; }
-    else selected = 25;
+    else { selected = 25; customEl.value = "25"; }
     render();
   }
   $("tabOnce").onclick = function(){ setMode("once"); };
   $("tabMonthly").onclick = function(){ setMode("monthly"); };
-  customEl.addEventListener("input", function(){ showError(); selected = null; render(); });
+  customEl.addEventListener("input", function(){
+    showError();
+    var n = parseFloat(customEl.value);
+    selected = (PRESETS.indexOf(n) > -1) ? n : null;
+    render();
+  });
 
   function currentAmount(){ return customEl.value ? parseFloat(customEl.value) : selected; }
   function finish(msg){ $("form").classList.add("hidden"); $("done").classList.remove("hidden"); if (msg) $("doneMsg").textContent = msg; }
@@ -162,6 +173,7 @@
 
   fetch("/api/config").then(function(r){ return r.json(); }).then(function(c){
     cfg = c; $("sym").textContent = sym() || cfg.currency;
+    customEl.value = String(selected);
     render();
     return initOnce().then(initMonthly);
   }).catch(function(){
